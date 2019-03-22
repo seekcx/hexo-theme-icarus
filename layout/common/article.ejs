@@ -7,10 +7,17 @@
     </div>
     <% } %>
     <div class="card-content article <%= post.hasOwnProperty('direction') ? post.direction : '' %>">
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            <% if (index) { %>
+                <a class="has-link-black-ter" href="<%- url_for(post.link ? post.link : post.path) %>"><%= post.title %></a>
+            <% } else { %>
+                <%= post.title %>
+            <% } %>
+        </h1>
         <% if (post.layout != 'page') { %>
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="<%= date_xml(post.date) %>"><%= date(post.date) %></time>
+                <time class="level-item has-text-grey" title="<%= full_date(post.date, 'YYYY-MM-DD HH:mm:ss') %>" datetime="<%= date_xml(post.date) %>"><%= date(post.date) %></time>
                 <% if (post.categories && post.categories.length) { %>
                 <div class="level-item">
                 <%- list_categories(post.categories, {
@@ -25,7 +32,7 @@
                 <span class="level-item has-text-grey">
                     <% const words = word_count(post._content); %>
                     <% const time = duration((words / 150.0) * 60, 'seconds') %>
-                    <%= `${ time.locale(get_config('language', 'en')).humanize() } ${ __('article.read')} (${ __('article.about') } ${ words } ${ __('article.words') })` %>
+                    <%= `${ words } ${ __('article.words') }${ __('article.about') } ${ time.locale(get_config('language', 'en')).humanize() }` %>
                 </span>
                 <% } %>
                 <% if (!index && (has_config('plugins.busuanzi') ? get_config('plugins.busuanzi') : false)) { %>
@@ -37,13 +44,6 @@
             </div>
         </div>
         <% } %>
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            <% if (index) { %>
-                <a class="has-link-black-ter" href="<%- url_for(post.link ? post.link : post.path) %>"><%= post.title %></a>
-            <% } else { %>
-                <%= post.title %>
-            <% } %>
-        </h1>
         <div class="content">
             <%- index && post.excerpt ? post.excerpt : post.content %>
         </div>
